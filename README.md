@@ -9,7 +9,7 @@ Tool агрегирует следы работы USB-носителей из а
 ## Требования
 
 - Python 3.12+
-- Windows 10 (для self-режима) или любая ОС, способная читать смонтированный NTFS (для drive-режима)
+- Windows 10
 - `uv` для управления зависимостями
 
 ## Установка
@@ -53,13 +53,6 @@ Users/<user>/AppData/Roaming/Microsoft/Windows/Recent/*.lnk          # откр�
 заблокированы — доставать их следует из VSS-снапшота. `.lnk`/`.evtx`/`.pf` —
 обычные файлы.
 
-### Режимы
-
-```
-usbforensics drive --path <dir>          # распакованные артефакты / смонтированный диск (работает)
-usbforensics self                        # self-triage активной системы (TODO, Phase 4)
-usbforensics image --path image.E01      # анализ образа диска (TODO, Phase 4)
-```
 
 ## Архитектура
 
@@ -83,37 +76,4 @@ usbforensics image --path image.E01      # анализ образа диска 
 | `lnk` | Recent\*.lnk | файлы, открытые пользователем (временна́я привязка) |
 | `shellbags` | UsrClass: BagMRU | папки, по которым лазили (прямая привязка по букве) |
 
-Корреляция собирает из этого по каждому устройству сводку **кто / когда / что**:
-пользователь, сессии подключения, файлы, активные в окне сессии, и папки,
-просмотренные на самом устройстве. Tool агрегирует факты; квалификацию действий
-(копирование, хищение и т.п.) делает аналитик.
 
-## Тесты
-
-```powershell
-uv run --extra dev pytest -q
-```
-
-## Сборка автономного .exe
-
-Собирает единый исполняемый файл `dist/usbforensics.exe`, не требующий
-установленного Python или зависимостей:
-
-```powershell
-uv run --extra dev pyinstaller --onefile --name usbforensics `
-  --collect-all pydantic --collect-all regipy `
-  --collect-submodules Evtx --collect-submodules pylnk3 --collect-submodules usbforensics `
-  --distpath dist --workpath build_pyi --specpath build_pyi -y pyi_entry.py
-```
-
-Запуск собранного файла:
-
-```powershell
-.\dist\usbforensics.exe drive --path C:\path\to\artifacts
-```
-
-## Дальнейшие планы
-
-- **prefetch / amcache** — следы запуска программ (в т.ч. с USB)
-- **Phase 4 (NTFS)** — `LiveSystemSource`/`ImageFileSource` через `pytsk3`, парсеры `$MFT`/`$UsnJrnl`; включает режимы `self` и `image`
-- **Phase 5** — сборка автономного `.exe` через PyInstaller
