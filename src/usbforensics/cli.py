@@ -2,12 +2,7 @@
 
 Subcommands map to the three acquisition modes:
     drive  — analyze a mounted drive or extracted artifacts directory
-    self   — analyze the active Windows system  (TODO: Phase 4)
-    image  — analyze a raw or .E01 disk image   (TODO: Phase 4)
 
-Phase 1.1 status: drive mode runs registry_usb and registry_device_classes parsers,
-groups events by iSerial, and prints a per-device summary including first install /
-last arrival / last removal timestamps. Markdown report rendering still TODO.
 """
 
 from __future__ import annotations
