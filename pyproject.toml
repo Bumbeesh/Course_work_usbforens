@@ -1,0 +1,51 @@
+[project]
+name = "usbforensics"
+version = "0.1.0"
+description = "Forensic analysis tool for USB Mass Storage device history on Windows"
+requires-python = ">=3.12"
+dependencies = [
+    "regipy>=4.0",
+    "pydantic>=2.7",
+    "typer>=0.12",
+    "python-evtx>=0.8",
+    "pylnk3>=0.4",
+]
+
+[project.optional-dependencies]
+# Add these as parsers come online. Native deps live in ntfs group.
+lnk = ["pylnk3>=0.4"]
+ntfs = [
+    "pytsk3>=20240115",
+    "libewf-python>=20240506",
+    "libesedb-python>=20240420",
+    "construct>=2.10",
+]
+all = [
+    "pylnk3>=0.4",
+    "pytsk3>=20240115",
+    "libewf-python>=20240506",
+    "libesedb-python>=20240420",
+    "construct>=2.10",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "pyinstaller>=6.0",
+]
+
+[project.scripts]
+usbforensics = "usbforensics.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/usbforensics"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
